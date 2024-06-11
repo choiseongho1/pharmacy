@@ -19,6 +19,10 @@ configurations {
     }
 }
 
+bootJar { // jar파일 설정
+    archiveFileName = 'app.jar'
+}
+
 repositories {
     mavenCentral()
 }
