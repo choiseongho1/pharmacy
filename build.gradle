@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.6'
     id 'io.spring.dependency-management' version '1.1.5'
+    id 'groovy'
 }
 
 group = 'com.ho'
@@ -36,6 +37,18 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // spock
+    // https://mvnrepository.com/artifact/org.spockframework/spock-core
+    testImplementation 'org.spockframework:spock-core:2.1-groovy-3.0'
+    // https://mvnrepository.com/artifact/org.spockframework/spock-spring
+    testImplementation 'org.spockframework:spock-spring:2.1-groovy-3.0'
+
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.8'
+
+
+    testImplementation('net.bytebuddy:byte-buddy:1.12.10')
+
 }
 
 tasks.named('test') {
