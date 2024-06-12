@@ -1,9 +1,10 @@
 package com.ho.project.api.service
 
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 
 import java.nio.charset.StandardCharsets
-
 
 class KakaoUriBuilderServiceTest extends Specification {
 
