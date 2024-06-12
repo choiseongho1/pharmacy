@@ -26,7 +26,7 @@ public class KakaoAddressSearchService {
     private String kakaoRestApiKey;
 
 
-    public KakaoApiResponseDto kakaoApiResponseDto(String address){
+    public KakaoApiResponseDto requestAddressSearch(String address){
         // null check
         if(ObjectUtils.isEmpty(address)) return null;
 
