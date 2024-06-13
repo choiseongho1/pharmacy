@@ -1,5 +1,6 @@
 package com.ho.project.pharmacy.entity;
 
+import com.ho.project.pharmacy.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import javax.persistence.Id;
 @Entity(name = "pharmacy")
 @Getter @Builder
 @NoArgsConstructor @AllArgsConstructor
-public class Pharmacy {
+public class Pharmacy extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
