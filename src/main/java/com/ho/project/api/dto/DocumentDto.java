@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DocumentDto {
 
+
+
     @JsonProperty("address_name")
     private String addressName;
 
