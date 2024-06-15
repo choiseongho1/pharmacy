@@ -43,6 +43,8 @@ public class KakaoAddressSearchService {
 
         // Header 값 Set
         HttpHeaders headers = new HttpHeaders();
+
+        log.info(kakaoRestApiKey);
         headers.set(HttpHeaders.AUTHORIZATION, "KakaoAK " + kakaoRestApiKey);
 
         HttpEntity httpEntity = new HttpEntity<>(headers);

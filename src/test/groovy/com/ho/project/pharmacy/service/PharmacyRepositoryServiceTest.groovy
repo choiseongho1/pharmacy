@@ -9,16 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired
 class PharmacyRepositoryServiceTest extends AbstractIntegrationContainerBaseTest {
 
     @Autowired
-    private PharmacyRepositoryService pharmacyRepositoryService;
+    private PharmacyRepositoryService pharmacyRepositoryService
 
     @Autowired
-    private PharmacyRepository pharmacyRepository;
+    PharmacyRepository pharmacyRepository
 
-    def setup(){
+    void setup() {
         pharmacyRepository.deleteAll()
     }
 
-    def "PharmacyRepository update - dirty checking success"(){
+    def "PharmacyRepository update - dirty checking success"() {
+
         given:
         String inputAddress = "서울 특별시 성북구 종암동"
         String modifiedAddress = "서울 광진구 구의동"
@@ -28,20 +29,18 @@ class PharmacyRepositoryServiceTest extends AbstractIntegrationContainerBaseTest
                 .pharmacyAddress(inputAddress)
                 .pharmacyName(name)
                 .build()
-
-        when :
+        when:
         def entity = pharmacyRepository.save(pharmacy)
-
         pharmacyRepositoryService.updateAddress(entity.getId(), modifiedAddress)
 
         def result = pharmacyRepository.findAll()
 
-        then :
+        then:
         result.get(0).getPharmacyAddress() == modifiedAddress
-        result.size() > 0
     }
 
-    def "PharmacyRepository update - dirty checking fail"(){
+    def "PharmacyRepository update - dirty checking fail"() {
+
         given:
         String inputAddress = "서울 특별시 성북구 종암동"
         String modifiedAddress = "서울 광진구 구의동"
@@ -51,17 +50,16 @@ class PharmacyRepositoryServiceTest extends AbstractIntegrationContainerBaseTest
                 .pharmacyAddress(inputAddress)
                 .pharmacyName(name)
                 .build()
-
-        when :
+        when:
         def entity = pharmacyRepository.save(pharmacy)
-
         pharmacyRepositoryService.updateAddressWithoutTransaction(entity.getId(), modifiedAddress)
 
         def result = pharmacyRepository.findAll()
 
-        then :
+        then:
         result.get(0).getPharmacyAddress() == inputAddress
     }
+
 
     def "self invocation"() {
 
@@ -87,7 +85,7 @@ class PharmacyRepositoryServiceTest extends AbstractIntegrationContainerBaseTest
         result.size() == 1 // 트랜잭션이 적용되지 않는다( 롤백 적용 X )
     }
 
-    def "transactional readOnly test - 읽기 전용일 경우 dirty checking 반영 되지 않는다. "() {
+    def "transactional readOnly test"() {
 
         given:
         String inputAddress = "서울 특별시 성북구"
@@ -111,5 +109,4 @@ class PharmacyRepositoryServiceTest extends AbstractIntegrationContainerBaseTest
         def result = pharmacyRepositoryService.findAll()
         result.get(0).getPharmacyAddress() == inputAddress
     }
-
 }

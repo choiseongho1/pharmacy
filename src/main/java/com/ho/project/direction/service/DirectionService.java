@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,12 +24,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DirectionService {
 
+    private static final String DIRECTION_BASE_URL = "https://map.kakao.com/link/map/";
+
+
     private static final int MAX_SEARCH_COUNT = 3; // 최대 검색 갯수
     private static final double RADIUS_KM = 10.0; // 반경 10km
 
     private final PharmacySearchService pharmacySearchService;
     private final DirectionRepository directionRepository;
     private final KakaoCategorySearchService kakaoCategorySearchService;
+    private final Base62Service base62Service;
 
     @Transactional
     public List<Direction> saveAll(List<Direction> directionList){
@@ -36,6 +41,17 @@ public class DirectionService {
 
         return directionRepository.saveAll(directionList);
 
+    }
+
+    public String findDirectionUrlById(String encodeId){
+        Long decodeId = base62Service.decodeDirectionId(encodeId);
+        Direction direction = directionRepository.findById(decodeId).orElse(null);
+
+        String params = String.join(",", direction.getTargetPharmacyName(), String.valueOf(direction.getTargetLatitude()), String.valueOf(direction.getTargetLongitude()));
+
+        String result = UriComponentsBuilder.fromHttpUrl(DIRECTION_BASE_URL + params).toUriString();
+
+        return result;
     }
 
     public List<Direction> buildDirectionList(DocumentDto documentDto){

@@ -27,3 +27,7 @@ services :
 
 #docker cp ./database/init/pharmacy.sql pharmacy-recommendation-database:/docker-entrypoint-initdb.d/
 #docker cp ./database/init/pharmacy.sql pharmacy-recommendation-database:/docker-entrypoint-initdb.d/
+
+
+#docker cp ./database/init/pharmacy.sql pharmacy-recommendation-database:/docker-entrypoint-initdb.d/
+#docker cp ./database/init/pharmacy.sql pharmacy-recommendation-database:/docker-entrypoint-initdb.d/
