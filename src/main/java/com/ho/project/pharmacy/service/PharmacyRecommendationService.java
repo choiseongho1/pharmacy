@@ -7,6 +7,9 @@ import com.ho.project.direction.dto.OutputDto;
 import com.ho.project.direction.entity.Direction;
 import com.ho.project.direction.service.Base62Service;
 import com.ho.project.direction.service.DirectionService;
+import com.ho.project.pharmacy.cache.PharmacyRedisTemplateService;
+import com.ho.project.pharmacy.dto.PharmacyDto;
+import com.ho.project.pharmacy.entity.Pharmacy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +34,10 @@ public class PharmacyRecommendationService {
 
     private final Base62Service base62Service;
 
+    private final PharmacyRedisTemplateService pharmacyRedisTemplateService;
+
+    private final PharmacyRepositoryService pharmacyRepositoryService;
+
     @Value("${pharmacy.recommendation.base.url}")
     private String baseUrl;
     private static final String ROAD_VIEW_BASE_URL = "https://map.kakao.com/link/roadview/";
@@ -48,7 +55,38 @@ public class PharmacyRecommendationService {
         DocumentDto documentDto = kakaoApiResponseDto.getDocumentList().get(0);
 
         List<Direction> directionList = directionService.buildDirectionList(documentDto);
-        //List<Direction> directionList = directionService.buildDirectionListByCategoryApi(documentDto);
+
+
+        // redis, db에서 조회했을때 검색이 되지 않는 경우 카카오 api검색 이후, db, redis에 저장
+        if(directionList.isEmpty()) {
+            directionList = directionService.buildDirectionListByCategoryApi(documentDto);
+
+            for(Direction direction : directionList){
+                System.out.println(1);
+
+                Pharmacy pharmacy = Pharmacy.builder()
+                        .pharmacyName(direction.getTargetPharmacyName())
+                        .pharmacyAddress(direction.getTargetAddress())
+                        .latitude(direction.getTargetLatitude())
+                        .longitude(direction.getTargetLongitude())
+                        .build();
+
+                Pharmacy savePharmacy = pharmacyRepositoryService.save(pharmacy);
+
+                pharmacyRedisTemplateService.save(PharmacyDto.builder()
+                        .id(savePharmacy.getId())
+                        .pharmacyName(direction.getTargetPharmacyName())
+                        .pharmacyAddress(direction.getTargetAddress())
+                        .latitude(direction.getTargetLatitude())
+                        .longitude(direction.getTargetLongitude())
+                        .build());
+            }
+
+
+        }
+//        List<Direction> directionList = directionService.buildDirectionListByCategoryApi(documentDto);
+
+
 
         return directionService.saveAll(directionList)
                 .stream()

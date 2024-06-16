@@ -1,10 +1,12 @@
 package com.ho.project.direction.service;
 
 import com.ho.project.api.dto.DocumentDto;
+import com.ho.project.api.dto.KakaoApiResponseDto;
 import com.ho.project.api.service.KakaoCategorySearchService;
 import com.ho.project.direction.entity.Direction;
 import com.ho.project.direction.repository.DirectionRepository;
 import com.ho.project.pharmacy.dto.PharmacyDto;
+import com.ho.project.pharmacy.entity.Pharmacy;
 import com.ho.project.pharmacy.service.PharmacySearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +57,7 @@ public class DirectionService {
     }
 
     public List<Direction> buildDirectionList(DocumentDto documentDto){
+
         if(Objects.isNull(documentDto)) return Collections.emptyList();
 
         // 약국 데이터 조회
@@ -85,11 +88,13 @@ public class DirectionService {
 
     // pharmacy search by category kakao api
     public List<Direction> buildDirectionListByCategoryApi(DocumentDto inputDocumentDto) {
+
+        log.info("[DirectionService buildDirectionListByCategoryApi 조회된 결과가 존재하지 않아, 카카오 재검색]");
         if(Objects.isNull(inputDocumentDto)) return Collections.emptyList();
 
-        return kakaoCategorySearchService
-                .requestPharmacyCategorySearch(inputDocumentDto.getLatitude(), inputDocumentDto.getLongitude(), RADIUS_KM)
-                .getDocumentList()
+        KakaoApiResponseDto responseDto = kakaoCategorySearchService.requestPharmacyCategorySearch(inputDocumentDto.getLatitude(), inputDocumentDto.getLongitude(), RADIUS_KM);
+
+        return responseDto.getDocumentList()
                 .stream().map(resultDocumentDto ->
                         Direction.builder()
                                 .inputAddress(inputDocumentDto.getAddressName())

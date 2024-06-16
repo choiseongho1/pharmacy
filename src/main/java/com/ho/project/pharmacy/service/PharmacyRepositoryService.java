@@ -72,4 +72,10 @@ public class PharmacyRepositoryService {
     public List<Pharmacy> findAll(){
         return pharmacyRepository.findAll();
     }
+
+
+    @Transactional
+    public Pharmacy save(Pharmacy pharmacy) {
+        return pharmacyRepository.save(pharmacy);
+    }
 }

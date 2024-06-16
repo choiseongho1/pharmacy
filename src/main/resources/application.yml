@@ -62,4 +62,4 @@ spring:
 pharmacy:
   recommendation:
     base:
-      url: http://172-31-3-187/dir/
+      url: http://43.200.0.104/dir/
