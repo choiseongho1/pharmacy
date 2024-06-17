@@ -62,7 +62,6 @@ public class PharmacyRecommendationService {
             directionList = directionService.buildDirectionListByCategoryApi(documentDto);
 
             for(Direction direction : directionList){
-                System.out.println(1);
 
                 Pharmacy pharmacy = Pharmacy.builder()
                         .pharmacyName(direction.getTargetPharmacyName())

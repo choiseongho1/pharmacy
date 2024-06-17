@@ -30,7 +30,7 @@ public class DirectionService {
 
 
     private static final int MAX_SEARCH_COUNT = 3; // 최대 검색 갯수
-    private static final double RADIUS_KM = 10.0; // 반경 10km
+    private static final double RADIUS_KM = 1.0; // 반경 1km
 
     private final PharmacySearchService pharmacySearchService;
     private final DirectionRepository directionRepository;
